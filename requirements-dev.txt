@@ -1,0 +1,17 @@
+﻿# Include all base requirements
+-r requirements.txt
+
+# Development Tools
+jupyter==1.0.0
+jupyterlab==4.0.11
+ipython==8.20.0
+
+# Debugging
+ipdb==0.13.13
+
+# Documentation
+mkdocs==1.5.3
+mkdocs-material==9.5.6
+
+# Performance Profiling
+memory-profiler==0.61.0

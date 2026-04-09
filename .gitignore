@@ -1,11 +1,12 @@
-﻿venv/
+﻿node_modules/
+frontend/node_modules/
+venv/
 .env
 __pycache__/
 *.pyc
-*.pyo
 data/raw/*
 data/processed/*
-data/archive/*
 *.log
 .vscode/
 .pytest_cache/
+frontend/dist/

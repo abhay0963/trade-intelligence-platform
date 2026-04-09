@@ -1,60 +1,11 @@
-﻿# Python
-__pycache__/
-*.py[cod]
-*.class
-*.so
-.Python
-venv/
-env/
-ENV/
-*.egg-info/
-dist/
-build/
-
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb
-
-# Environment variables
+﻿venv/
 .env
-*.env
-
-# Data files
-data/bronze/*
-data/silver/*
-data/gold/*
+__pycache__/
+*.pyc
+*.pyo
 data/raw/*
-!data/bronze/.gitkeep
-!data/silver/.gitkeep
-!data/gold/.gitkeep
-!data/raw/.gitkeep
-
-# Logs
+data/processed/*
+data/archive/*
 *.log
-logs/
-src/airflow/logs/
-
-# IDE
 .vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Docker
-.docker/
-
-# Spark
-metastore_db/
-derby.log
-spark-warehouse/
-
-# MLflow
-mlruns/
-
-# Temporary files
-*.tmp
-*.bak
+.pytest_cache/

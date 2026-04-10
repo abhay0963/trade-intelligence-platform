@@ -1,16 +1,16 @@
-﻿# 🌍 Adaptive AI-Driven Global Trade Intelligence & Opportunity Discovery Platform
+﻿#  Adaptive AI-Driven Global Trade Intelligence & Opportunity Discovery Platform
 
-## 🎯 Project Overview
+##  Project Overview
 
 A production-grade data engineering platform that analyzes global trade datasets to produce actionable market intelligence using distributed computing, streaming pipelines, and machine learning.
 
-## 🏗️ Architecture
+##  Architecture
 
 \\\
 Data Sources → Kafka → Spark → Data Lake (Bronze/Silver/Gold) → ML Models → API → Dashboard
 \\\
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Processing**: Apache Spark (PySpark)
 - **Streaming**: Apache Kafka
@@ -21,7 +21,7 @@ Data Sources → Kafka → Spark → Data Lake (Bronze/Silver/Gold) → ML Model
 - **ML**: scikit-learn, Prophet, PyTorch
 - **Containerization**: Docker
 
-## 📁 Project Structure
+##  Project Structure
 
 \\\
 trade-intelligence-platform/
@@ -41,7 +41,7 @@ trade-intelligence-platform/
 └── docs/                    # Documentation
 \\\
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Setup Environment
 \\\powershell
@@ -63,7 +63,7 @@ docker-compose up -d
 - Kafka: localhost:9092
 - Spark UI: localhost:8080
 
-## 📊 Features
+##  Features
 
 - ✅ Country Trade Analysis
 - ✅ Trending Product Detection
@@ -72,10 +72,3 @@ docker-compose up -d
 - ✅ Trade Forecasting
 - ✅ Trade Shock Simulation
 
-## 👥 Team
-
-Data Engineering Portfolio Project - Masters Program
-
-## 📝 License
-
-MIT

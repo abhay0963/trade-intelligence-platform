@@ -1,4 +1,6 @@
 ﻿services:
+
+  # PostgreSQL — your data warehouse
   postgres:
     image: postgres:15-alpine
     container_name: trade_postgres
@@ -12,5 +14,59 @@
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  # Airflow needs its own PostgreSQL database to store its logs and state
+  # This is separate from your trade data database
+  airflow_db:
+    image: postgres:15-alpine
+    container_name: airflow_postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Airflow webserver — the UI you visit to see your DAGs
+  airflow_webserver:
+    image: apache/airflow:2.8.0
+    container_name: airflow_webserver
+    depends_on:
+      - airflow_db
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db/airflow
+      AIRFLOW__CORE__FERNET_KEY: ''
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+      AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'trade-intelligence-secret'
+    volumes:
+      - ./src/airflow/dags:/opt/airflow/dags   # mounts your DAG files
+      - airflow_logs:/opt/airflow/logs
+    ports:
+      - "8080:8080"
+    command: webserver
+    restart: unless-stopped
+
+  # Airflow scheduler — the engine that actually runs your DAGs
+  airflow_scheduler:
+    image: apache/airflow:2.8.0
+    container_name: airflow_scheduler
+    depends_on:
+      - airflow_db
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db/airflow
+      AIRFLOW__CORE__FERNET_KEY: ''
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'trade-intelligence-secret'
+    volumes:
+      - ./src/airflow/dags:/opt/airflow/dags
+      - airflow_logs:/opt/airflow/logs
+    command: scheduler
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+  airflow_db_data:
+  airflow_logs:

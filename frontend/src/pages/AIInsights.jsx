@@ -15,6 +15,39 @@ const COUNTRIES = [
   {code:'ZAF',name:'South Africa'}
 ]
 
+function formatInsight(text) {
+  return text.split('\n').map((line, i) => {
+    const trimmed = line.trim()
+    if (!trimmed) return <div key={i} style={{ height: '10px' }} />
+    if (trimmed.match(/^#{1,3}\s/) || trimmed.match(/^\d+\.\s+[A-Z]/)) {
+      return <p key={i} style={{ fontSize: '18px', fontWeight: 700, color: '#38bdf8', margin: '24px 0 8px', borderBottom: '1px solid #1e3a5f', paddingBottom: '6px' }}>
+        {trimmed.replace(/^#{1,3}\s+/, '').replace(/\*\*/g, '')}
+      </p>
+    }
+    if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
+      return <p key={i} style={{ fontSize: '15px', fontWeight: 600, color: '#f1f5f9', margin: '14px 0 4px' }}>
+        {trimmed.replace(/\*\*/g, '')}
+      </p>
+    }
+    if (trimmed.match(/^\*\*.+\*\*/)) {
+      const parts = trimmed.split(/\*\*/)
+      return <p key={i} style={{ fontSize: '14px', color: '#cbd5e1', margin: '6px 0' }}>
+        {parts.map((part, j) => j % 2 === 1
+          ? <strong key={j} style={{ color: '#f1f5f9' }}>{part}</strong>
+          : part
+        )}
+      </p>
+    }
+    if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {
+      return <p key={i} style={{ fontSize: '14px', color: '#94a3b8', margin: '5px 0', paddingLeft: '20px', display: 'flex', gap: '8px' }}>
+        <span style={{ color: '#0ea5e9', flexShrink: 0 }}>→</span>
+        <span>{trimmed.slice(2)}</span>
+      </p>
+    }
+    return <p key={i} style={{ fontSize: '14px', color: '#cbd5e1', margin: '5px 0', lineHeight: '1.7' }}>{trimmed}</p>
+  })
+}
+
 export default function AIInsights() {
   const [selected, setSelected] = useState('IND')
   const [insight, setInsight]   = useState('')
@@ -24,8 +57,6 @@ export default function AIInsights() {
   function analyze() {
     setLoading(true)
     setInsight('')
-
-    // First fetch the country profile so Groq has real data
     axios.get(`${API}/api/countries/${selected}/profile`)
       .then(r => {
         setProfile(r.data)
@@ -38,14 +69,8 @@ export default function AIInsights() {
           top_imports:  r.data.top_imports
         })
       })
-      .then(r => {
-        setInsight(r.data.insight)
-        setLoading(false)
-      })
-      .catch(() => {
-        setInsight('Failed to get insights. Make sure the API is running.')
-        setLoading(false)
-      })
+      .then(r => { setInsight(r.data.insight); setLoading(false) })
+      .catch(() => { setInsight('Failed to get insights. Make sure the API is running.'); setLoading(false) })
   }
 
   const countryName = COUNTRIES.find(c => c.code === selected)?.name
@@ -65,7 +90,6 @@ export default function AIInsights() {
         >
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
         </select>
-
         <button
           onClick={analyze}
           disabled={loading}
@@ -84,13 +108,12 @@ export default function AIInsights() {
 
       {insight && (
         <div style={{ background: '#1e293b', borderRadius: '12px', padding: '32px', border: '1px solid #334155' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid #334155' }}>
-            <span style={{ background: '#0ea5e9', borderRadius: '6px', padding: '4px 10px', fontSize: '12px', fontWeight: 600 }}>AI Analysis</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #334155' }}>
+            <span style={{ background: '#0ea5e9', borderRadius: '6px', padding: '4px 12px', fontSize: '12px', fontWeight: 600, color: '#fff' }}>AI Analysis</span>
             <span style={{ color: '#64748b', fontSize: '13px' }}>{countryName}</span>
+            <span style={{ color: '#334155', fontSize: '12px', marginLeft: 'auto' }}>Powered by Groq · Llama 3.3 70B</span>
           </div>
-          <div style={{ lineHeight: '1.8', fontSize: '15px', color: '#e2e8f0', whiteSpace: 'pre-wrap' }}>
-            {insight}
-          </div>
+          <div>{formatInsight(insight)}</div>
         </div>
       )}
     </div>

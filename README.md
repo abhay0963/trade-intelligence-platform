@@ -17,7 +17,7 @@ Data Sources → Kafka → Spark → Data Lake (Bronze/Silver/Gold) → ML Model
 - **Orchestration**: Apache Airflow
 - **Database**: PostgreSQL
 - **API**: FastAPI
-- **Dashboard**: Streamlit
+- **Dashboard**: React JSX
 - **ML**: scikit-learn, Prophet, PyTorch
 - **Containerization**: Docker
 
